@@ -135,6 +135,15 @@ view edoIStates msgToMainMsg =
         , UI.textField tiniStr "Tini " <| msgToMainMsg << Tini
         , UI.textField tfimStr "Tfin" <| msgToMainMsg << Tfim ]
         
+view2 : EdoIStates -> (Msg -> msg) -> E.Element msg
+view2 edoIStates msgToMainMsg =
+  let
+    tiniStr = .tiniStr edoIStates
+    tfimStr = .tfimStr edoIStates
+  in
+    E.column [E.spacing 0, E.alignTop, E.moveUp 5]
+        [ UI.textField tiniStr "Tini " <| msgToMainMsg << Tini
+        , UI.textField tfimStr "Tfin" <| msgToMainMsg << Tfim ]
     
 ------------------------------------------------
 -- EdoSolver Functions

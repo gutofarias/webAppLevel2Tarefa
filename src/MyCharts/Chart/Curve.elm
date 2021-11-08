@@ -95,6 +95,18 @@ view chartData selStr =
                     , chartAxisOptionView2 chartDatum "u3" selStr
                     , chartAxisOptionView2 chartDatum "u4" selStr
                     ]
+                DC.TS2E1R1U4 datum ->
+                    [ chartAxisOptionView2 chartDatum "t"  selStr 
+                    , chartAxisOptionView2 chartDatum "x1" selStr
+                    , chartAxisOptionView2 chartDatum "x2" selStr
+                    , chartAxisOptionView2 chartDatum "e1" selStr
+                    , chartAxisOptionView2 chartDatum "r1" selStr
+                    , chartAxisOptionView2 chartDatum "u1" selStr
+                    , chartAxisOptionView2 chartDatum "u2" selStr
+                    , chartAxisOptionView2 chartDatum "u3" selStr
+                    , chartAxisOptionView2 chartDatum "u4" selStr
+                    ]
+
 
 optionToNameCurve : DC.ChartDatum -> String -> String
 optionToNameCurve chartDatum optStr =
@@ -117,6 +129,19 @@ optionToNameCurve chartDatum optStr =
             case optStr of
                 "t" -> "t"
                 "x1" -> "x"
+                "e1" -> "e" 
+                "r1" -> "r"
+                "u1"-> "u"
+                "u2"-> "up"
+                "u3"-> "ui"
+                "u4"-> "ud"
+                _ -> "erro"
+                     
+        DC.TS2E1R1U4 datum -> 
+            case optStr of
+                "t" -> "t"
+                "x1" -> "x1"
+                "x2" -> "x2"
                 "e1" -> "e" 
                 "r1" -> "r"
                 "u1"-> "u"

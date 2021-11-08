@@ -5227,7 +5227,7 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$ModelSystem$Level = {$: 'Level'};
+var $author$project$ModelSystem$Level2 = {$: 'Level2'};
 var $author$project$Main$SolvingEdo = function (a) {
 	return {$: 'SolvingEdo', a: a};
 };
@@ -5240,8 +5240,13 @@ var $author$project$Controller$init = function (controlType) {
 	return $author$project$Controller$PidModel($author$project$Controller$PID$init);
 };
 var $author$project$ModelSystem$Level$control = $author$project$Controller$init($author$project$Controller$PID);
+var $author$project$ModelSystem$Level2$control = $author$project$Controller$init($author$project$Controller$PID);
 var $author$project$ModelSystem$control = function (modelType) {
-	return $author$project$ModelSystem$Level$control;
+	if (modelType.$ === 'Level') {
+		return $author$project$ModelSystem$Level$control;
+	} else {
+		return $author$project$ModelSystem$Level2$control;
+	}
 };
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $author$project$EdoSolver$edoIStatesFromEdoParam = function (edoParam) {
@@ -5255,15 +5260,21 @@ var $author$project$EdoSolver$edoIStatesFromEdoParam = function (edoParam) {
 		}(edoParam));
 	return {tfimStr: tfimStr, tiniStr: tiniStr};
 };
+var $author$project$ModelSystem$Level2Model = function (a) {
+	return {$: 'Level2Model', a: a};
+};
 var $author$project$ModelSystem$LevelModel = function (a) {
 	return {$: 'LevelModel', a: a};
 };
 var $author$project$ModelSystem$Level$init = {ag: 1.0, agStr: '1', ap: 0.1, apStr: '0.1', h0: 10.0, h0Str: '10'};
+var $author$project$ModelSystem$Level2$init = {ag1: 1.0, ag1Str: '1', ag2: 1.0, ag2Str: '1', ap1: 0.1, ap1Str: '0.1', ap2: 0.1, ap2Str: '0.1', h01: 10.0, h01Str: '10', h02: 10.0, h02Str: '10'};
 var $author$project$ModelSystem$init = function (modelType) {
-	return $author$project$ModelSystem$LevelModel($author$project$ModelSystem$Level$init);
+	if (modelType.$ === 'Level') {
+		return $author$project$ModelSystem$LevelModel($author$project$ModelSystem$Level$init);
+	} else {
+		return $author$project$ModelSystem$Level2Model($author$project$ModelSystem$Level2$init);
+	}
 };
-var $author$project$UI$elementHeight = 400;
-var $author$project$UI$elementWidth = 400;
 var $author$project$MyCharts$Chart$Curve$init = function (maybeLastCurve) {
 	if (maybeLastCurve.$ === 'Nothing') {
 		return {
@@ -5284,6 +5295,8 @@ var $author$project$MyCharts$Chart$Curve$init = function (maybeLastCurve) {
 };
 var $author$project$MyCharts$Chart$Zoom$NoZoom = {$: 'NoZoom'};
 var $author$project$MyCharts$Chart$Zoom$init = $author$project$MyCharts$Chart$Zoom$NoZoom;
+var $author$project$UI$elementHeight = 400;
+var $author$project$UI$elementWidth = 400;
 var $gampleman$elm_visualization$Zoom$NoTouches = {$: 'NoTouches'};
 var $gampleman$elm_visualization$Zoom$Zoom = function (a) {
 	return {$: 'Zoom', a: a};
@@ -5317,6 +5330,22 @@ var $gampleman$elm_visualization$Zoom$init = function (_v0) {
 				_Utils_Tuple2($gampleman$elm_visualization$Zoom$infinity, $gampleman$elm_visualization$Zoom$infinity))
 		});
 };
+var $gampleman$elm_visualization$Zoom$scaleExtent = F3(
+	function (mn, mx, _v0) {
+		var zoom = _v0.a;
+		return $gampleman$elm_visualization$Zoom$Zoom(
+			_Utils_update(
+				zoom,
+				{
+					scaleExtent: _Utils_Tuple2(mn, mx)
+				}));
+	});
+var $author$project$MyCharts$Chart$myInitZoom = A3(
+	$gampleman$elm_visualization$Zoom$scaleExtent,
+	0.5,
+	1000.0,
+	$gampleman$elm_visualization$Zoom$init(
+		{height: $author$project$UI$elementHeight, width: $author$project$UI$elementWidth}));
 var $author$project$MyCharts$Chart$init = function (maybeLastChart) {
 	if (maybeLastChart.$ === 'Nothing') {
 		return {
@@ -5326,8 +5355,7 @@ var $author$project$MyCharts$Chart$init = function (maybeLastChart) {
 					$author$project$MyCharts$Chart$Curve$init($elm$core$Maybe$Nothing)
 				]),
 			editingCurves: false,
-			zoom: $gampleman$elm_visualization$Zoom$init(
-				{height: $author$project$UI$elementHeight, width: $author$project$UI$elementWidth}),
+			zoom: $author$project$MyCharts$Chart$myInitZoom,
 			zoomModel: $author$project$MyCharts$Chart$Zoom$init
 		};
 	} else {
@@ -5343,8 +5371,7 @@ var $author$project$MyCharts$Chart$init = function (maybeLastChart) {
 					$author$project$MyCharts$Chart$Curve$init($elm$core$Maybe$Nothing)
 				]),
 			editingCurves: false,
-			zoom: $gampleman$elm_visualization$Zoom$init(
-				{height: $author$project$UI$elementHeight, width: $author$project$UI$elementWidth}),
+			zoom: $author$project$MyCharts$Chart$myInitZoom,
 			zoomModel: $author$project$MyCharts$Chart$Zoom$init
 		};
 	}
@@ -5472,8 +5499,13 @@ var $author$project$EdoSolver$rungeKutta = F4(
 						k4))));
 	});
 var $author$project$ModelSystem$Level$initEdoParam = {controlMemory: _List_Nil, passo: 0.001, relPassoSaida: 100, solver: $author$project$EdoSolver$rungeKutta, tempo: 0.0, tfim: 10.0};
+var $author$project$ModelSystem$Level2$initEdoParam = {controlMemory: _List_Nil, passo: 0.001, relPassoSaida: 100, solver: $author$project$EdoSolver$rungeKutta, tempo: 0.0, tfim: 10.0};
 var $author$project$ModelSystem$initEdoParam = function (modelType) {
-	return $author$project$ModelSystem$Level$initEdoParam;
+	if (modelType.$ === 'Level') {
+		return $author$project$ModelSystem$Level$initEdoParam;
+	} else {
+		return $author$project$ModelSystem$Level2$initEdoParam;
+	}
 };
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
@@ -5486,11 +5518,16 @@ var $author$project$Reference$init = function (refType) {
 	return $author$project$Reference$Step1Model($author$project$Reference$Step1$init);
 };
 var $author$project$ModelSystem$Level$ref = $author$project$Reference$init($author$project$Reference$Step1);
+var $author$project$ModelSystem$Level2$ref = $author$project$Reference$init($author$project$Reference$Step1);
 var $author$project$ModelSystem$ref = function (modelType) {
-	return $author$project$ModelSystem$Level$ref;
+	if (modelType.$ === 'Level') {
+		return $author$project$ModelSystem$Level$ref;
+	} else {
+		return $author$project$ModelSystem$Level2$ref;
+	}
 };
 var $author$project$Main$init = function (_v0) {
-	var modelSystemType = $author$project$ModelSystem$Level;
+	var modelSystemType = $author$project$ModelSystem$Level2;
 	var edoParam = $author$project$ModelSystem$initEdoParam(modelSystemType);
 	var edoIStates = $author$project$EdoSolver$edoIStatesFromEdoParam(edoParam);
 	return _Utils_Tuple2(
@@ -6401,6 +6438,15 @@ var $author$project$EdoSolver$checkEndTimeEps = F2(
 			$elm$core$Basics$abs(tempo - tfim),
 			$author$project$EdoSolver$eps) < 1) ? true : false;
 	});
+var $author$project$EdoSolver$eulerSolver = F4(
+	function (fsist, passo, tempo, xs) {
+		var xps = A2(fsist, tempo, xs);
+		var xps2 = A2(
+			$elm$core$List$map,
+			$elm$core$Basics$mul(passo),
+			xps);
+		return A3($author$project$EdoSolver$zipWith, $elm$core$Basics$add, xs, xps2);
+	});
 var $elm$core$List$head = function (list) {
 	if (list.b) {
 		var x = list.a;
@@ -6412,10 +6458,21 @@ var $elm$core$List$head = function (list) {
 };
 var $author$project$Controller$PID$pid = F8(
 	function (kp, ki, kd, mem, errors, passo, tempo, xs) {
+		var filterParam = 0.05;
+		var fP = 1.0 / filterParam;
 		var error = A2(
 			$elm$core$Maybe$withDefault,
 			0.0,
 			$elm$core$List$head(errors));
+		var errorfsist = F2(
+			function (t, xs2) {
+				if (xs2.b && (!xs2.b.b)) {
+					var x = xs2.a;
+					return A2($elm$core$List$cons, ((-fP) * x) - ((fP * fP) * error), _List_Nil);
+				} else {
+					return A2($elm$core$List$cons, (-fP) * error, _List_Nil);
+				}
+			});
 		var prop = kp * error;
 		var _v0 = function () {
 			if ((mem.b && mem.b.b) && (!mem.b.b.b)) {
@@ -6424,20 +6481,31 @@ var $author$project$Controller$PID$pid = F8(
 				var int_mem = _v2.a;
 				return _Utils_Tuple2(err_mem, int_mem);
 			} else {
-				return _Utils_Tuple2(error, 0.0);
+				return _Utils_Tuple2((-fP) * error, 0.0);
 			}
 		}();
-		var error_ant = _v0.a;
+		var error_state = _v0.a;
 		var integral_mem = _v0.b;
-		var dif_error = (error - error_ant) / passo;
-		var dif = kd * dif_error;
+		var derror_aux = A2(
+			$elm$core$Maybe$withDefault,
+			(-fP) * error,
+			$elm$core$List$head(
+				A4(
+					$author$project$EdoSolver$eulerSolver,
+					errorfsist,
+					passo,
+					tempo,
+					_List_fromArray(
+						[error_state]))));
+		var derror = derror_aux + (fP * error);
+		var dif = kd * derror;
 		var integral_error = integral_mem + (error * passo);
 		var integral = ki * integral_error;
 		return _Utils_Tuple2(
 			_List_fromArray(
 				[(prop + integral) + dif, prop, integral, dif]),
 			_List_fromArray(
-				[error, integral_error]));
+				[derror_aux, integral_error]));
 	});
 var $author$project$Controller$PID$controllerFromModel = function (model) {
 	var kp = function ($) {
@@ -6809,10 +6877,125 @@ var $author$project$ModelSystem$Level$runEdo = F4(
 			$author$project$DataConvert$toChartDataTS1E1R1U4(edoData),
 			edoParamNew);
 	});
+var $author$project$ModelSystem$Level2$output = F2(
+	function (tempo, xs) {
+		if (xs.b && xs.b.b) {
+			var x1 = xs.a;
+			var _v1 = xs.b;
+			var x2 = _v1.a;
+			var ls = _v1.b;
+			return _List_fromArray(
+				[x2]);
+		} else {
+			return xs;
+		}
+	});
+var $author$project$ModelSystem$Level2$system = F4(
+	function (model, us, t, state) {
+		var uAux = A2(
+			$elm$core$Maybe$withDefault,
+			0.0,
+			$elm$core$List$head(us));
+		var u = (uAux < 0.0) ? 0.0 : uAux;
+		var g = 9.28;
+		var ap2 = function ($) {
+			return $.ap2;
+		}(model);
+		var ap1 = function ($) {
+			return $.ap1;
+		}(model);
+		var ag2 = function ($) {
+			return $.ag2;
+		}(model);
+		var ag1 = function ($) {
+			return $.ag1;
+		}(model);
+		if (state.b && state.b.b) {
+			var h1 = state.a;
+			var _v1 = state.b;
+			var h2 = _v1.a;
+			var ls = _v1.b;
+			var qi1 = u;
+			var h2n = (h2 >= 0.0) ? h2 : 0.0;
+			var qo2 = (ap2 * $elm$core$Basics$sqrt(2.0 * g)) * $elm$core$Basics$sqrt(h2n);
+			var h1n = (h1 >= 0.0) ? h1 : 0.0;
+			var qo1 = (ap1 * $elm$core$Basics$sqrt(2.0 * g)) * $elm$core$Basics$sqrt(h1n);
+			var qi2 = qo1;
+			return A2(
+				$elm$core$List$cons,
+				(qi1 / ag1) - (qo1 / ag1),
+				A2($elm$core$List$cons, (qi2 / ag2) - (qo2 / ag2), _List_Nil));
+		} else {
+			return A2($elm$core$List$cons, 0.0, _List_Nil);
+		}
+	});
+var $author$project$DataConvert$TS2E1R1U4 = function (a) {
+	return {$: 'TS2E1R1U4', a: a};
+};
+var $author$project$DataConvert$toChartDatumTS2E1R1U4 = function (edoDatum) {
+	var tempo = edoDatum.a;
+	var sist = edoDatum.b;
+	if (((((((sist.b && sist.b.b) && sist.b.b.b) && sist.b.b.b.b) && sist.b.b.b.b.b) && sist.b.b.b.b.b.b) && sist.b.b.b.b.b.b.b) && sist.b.b.b.b.b.b.b.b) {
+		var x1 = sist.a;
+		var _v2 = sist.b;
+		var x2 = _v2.a;
+		var _v3 = _v2.b;
+		var e = _v3.a;
+		var _v4 = _v3.b;
+		var r = _v4.a;
+		var _v5 = _v4.b;
+		var u1 = _v5.a;
+		var _v6 = _v5.b;
+		var u2 = _v6.a;
+		var _v7 = _v6.b;
+		var u3 = _v7.a;
+		var _v8 = _v7.b;
+		var u4 = _v8.a;
+		var xs = _v8.b;
+		return $elm$core$Maybe$Just(
+			$author$project$DataConvert$TS2E1R1U4(
+				{e1: e, r1: r, t: tempo, u1: u1, u2: u2, u3: u3, u4: u4, x1: x1, x2: x2}));
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$DataConvert$toChartDataTS2E1R1U4 = $elm$core$List$filterMap($author$project$DataConvert$toChartDatumTS2E1R1U4);
+var $author$project$ModelSystem$Level2$runEdo = F4(
+	function (model, edoParam, refFunc, controller) {
+		var initState = A2(
+			$elm$core$List$cons,
+			function ($) {
+				return $.h01;
+			}(model),
+			A2(
+				$elm$core$List$cons,
+				function ($) {
+					return $.h02;
+				}(model),
+				_List_Nil));
+		var edoSist = $author$project$EdoSolver$Controlled(
+			{
+				controller: controller,
+				outputFunc: $author$project$ModelSystem$Level2$output,
+				refFunc: refFunc,
+				sistFunc: $author$project$ModelSystem$Level2$system(model)
+			});
+		var _v0 = A3($author$project$EdoSolver$edoSolverReversed, edoParam, edoSist, initState);
+		var edoData = _v0.a;
+		var edoParamNew = _v0.b;
+		return _Utils_Tuple2(
+			$author$project$DataConvert$toChartDataTS2E1R1U4(edoData),
+			edoParamNew);
+	});
 var $author$project$ModelSystem$runEdo = F4(
 	function (model, edoParam, refFunc, controller) {
-		var levelModel = model.a;
-		return A4($author$project$ModelSystem$Level$runEdo, levelModel, edoParam, refFunc, controller);
+		if (model.$ === 'LevelModel') {
+			var levelModel = model.a;
+			return A4($author$project$ModelSystem$Level$runEdo, levelModel, edoParam, refFunc, controller);
+		} else {
+			var level2Model = model.a;
+			return A4($author$project$ModelSystem$Level2$runEdo, level2Model, edoParam, refFunc, controller);
+		}
 	});
 var $elm$core$String$toFloat = _String_toFloat;
 var $author$project$Controller$PID$update = F2(
@@ -6892,12 +7075,92 @@ var $author$project$ModelSystem$Level$update = F2(
 					{ap: val, apStr: valueStr});
 		}
 	});
+var $author$project$ModelSystem$Level2$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'H01':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var h01 = function ($) {
+					return $.h01;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, h01, maybeVal);
+				return _Utils_update(
+					model,
+					{h01: val, h01Str: valueStr});
+			case 'Ag1':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var ag1 = function ($) {
+					return $.ag1;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, ag1, maybeVal);
+				return _Utils_update(
+					model,
+					{ag1: val, ag1Str: valueStr});
+			case 'Ap1':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var ap1 = function ($) {
+					return $.ap1;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, ap1, maybeVal);
+				return _Utils_update(
+					model,
+					{ap1: val, ap1Str: valueStr});
+			case 'H02':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var h02 = function ($) {
+					return $.h02;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, h02, maybeVal);
+				return _Utils_update(
+					model,
+					{h02: val, h02Str: valueStr});
+			case 'Ag2':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var ag2 = function ($) {
+					return $.ag2;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, ag2, maybeVal);
+				return _Utils_update(
+					model,
+					{ag2: val, ag2Str: valueStr});
+			default:
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var ap2 = function ($) {
+					return $.ap2;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, ap2, maybeVal);
+				return _Utils_update(
+					model,
+					{ap2: val, ap2Str: valueStr});
+		}
+	});
 var $author$project$ModelSystem$update = F2(
 	function (msg, model) {
-		var levelMsg = msg.a;
-		var levelModel = model.a;
-		return $author$project$ModelSystem$LevelModel(
-			A2($author$project$ModelSystem$Level$update, levelMsg, levelModel));
+		if (msg.$ === 'LevelMsg') {
+			var levelMsg = msg.a;
+			if (model.$ === 'LevelModel') {
+				var levelModel = model.a;
+				return $author$project$ModelSystem$LevelModel(
+					A2($author$project$ModelSystem$Level$update, levelMsg, levelModel));
+			} else {
+				return model;
+			}
+		} else {
+			var level2Msg = msg.a;
+			if (model.$ === 'Level2Model') {
+				var level2Model = model.a;
+				return $author$project$ModelSystem$Level2Model(
+					A2($author$project$ModelSystem$Level2$update, level2Msg, level2Model));
+			} else {
+				return model;
+			}
+		}
 	});
 var $author$project$MyCharts$Chart$addModel = function (chartID) {
 	return {
@@ -6907,8 +7170,7 @@ var $author$project$MyCharts$Chart$addModel = function (chartID) {
 				$author$project$MyCharts$Chart$Curve$init($elm$core$Maybe$Nothing)
 			]),
 		editingCurves: false,
-		zoom: $gampleman$elm_visualization$Zoom$init(
-			{height: $author$project$UI$elementHeight, width: $author$project$UI$elementWidth}),
+		zoom: $author$project$MyCharts$Chart$myInitZoom,
 		zoomModel: $author$project$MyCharts$Chart$Zoom$init
 	};
 };
@@ -7843,11 +8105,41 @@ var $author$project$ModelSystem$Level$updateModelFromXs = F2(
 			model,
 			{h0: newH0});
 	});
+var $author$project$ModelSystem$Level2$updateModelFromXs = F2(
+	function (xs, model) {
+		var h02 = function ($) {
+			return $.h02;
+		}(model);
+		var h01 = function ($) {
+			return $.h01;
+		}(model);
+		var _v0 = function () {
+			if ((xs.b && xs.b.b) && (!xs.b.b.b)) {
+				var xs1 = xs.a;
+				var _v2 = xs.b;
+				var xs2 = _v2.a;
+				return _Utils_Tuple2(xs1, xs2);
+			} else {
+				return _Utils_Tuple2(0.0, 0.0);
+			}
+		}();
+		var newH01 = _v0.a;
+		var newH02 = _v0.b;
+		return _Utils_update(
+			model,
+			{h01: newH01, h02: newH02});
+	});
 var $author$project$ModelSystem$updateModelFromXs = F2(
 	function (xs, model) {
-		var levelModel = model.a;
-		return $author$project$ModelSystem$LevelModel(
-			A2($author$project$ModelSystem$Level$updateModelFromXs, xs, levelModel));
+		if (model.$ === 'LevelModel') {
+			var levelModel = model.a;
+			return $author$project$ModelSystem$LevelModel(
+				A2($author$project$ModelSystem$Level$updateModelFromXs, xs, levelModel));
+		} else {
+			var level2Model = model.a;
+			return $author$project$ModelSystem$Level2Model(
+				A2($author$project$ModelSystem$Level2$updateModelFromXs, xs, level2Model));
+		}
 	});
 var $author$project$Main$updatingBigModelFromModel = F2(
 	function (bigModel, newModel) {
@@ -7877,12 +8169,23 @@ var $author$project$DataConvert$xsFromDatum = function (chartDatum) {
 					return $.x1;
 				}(datum)
 				]);
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return _List_fromArray(
+				[
+					function ($) {
+					return $.x1;
+				}(datum)
+				]);
 		default:
 			var datum = chartDatum.a;
 			return _List_fromArray(
 				[
 					function ($) {
 					return $.x1;
+				}(datum),
+					function ($) {
+					return $.x2;
 				}(datum)
 				]);
 	}
@@ -7895,9 +8198,25 @@ var $author$project$ModelSystem$Level$xsFromModel = function (model) {
 		}(model)
 		]);
 };
+var $author$project$ModelSystem$Level2$xsFromModel = function (model) {
+	return _List_fromArray(
+		[
+			function ($) {
+			return $.h01;
+		}(model),
+			function ($) {
+			return $.h02;
+		}(model)
+		]);
+};
 var $author$project$ModelSystem$xsFromModel = function (model) {
-	var levelModel = model.a;
-	return $author$project$ModelSystem$Level$xsFromModel(levelModel);
+	if (model.$ === 'LevelModel') {
+		var levelModel = model.a;
+		return $author$project$ModelSystem$Level$xsFromModel(levelModel);
+	} else {
+		var level2Model = model.a;
+		return $author$project$ModelSystem$Level2$xsFromModel(level2Model);
+	}
 };
 var $author$project$Main$update = F2(
 	function (msg, bigModel) {
@@ -14088,6 +14407,13 @@ var $terezka$elm_charts$Chart$Attributes$alignLeft = function (config) {
 			anchor: $elm$core$Maybe$Just($terezka$elm_charts$Internal$Svg$Start)
 		});
 };
+var $gampleman$elm_visualization$Zoom$asRecord = function (_v0) {
+	var zoom = _v0.a;
+	return {
+		scale: zoom.transform.k,
+		translate: {x: zoom.transform.x, y: zoom.transform.y}
+	};
+};
 var $terezka$elm_charts$Chart$Attributes$attrs = F2(
 	function (v, config) {
 		return _Utils_update(
@@ -16243,13 +16569,37 @@ var $author$project$MyCharts$Chart$Curve$optionToNameCurve = F2(
 					default:
 						return 'erro';
 				}
-			default:
+			case 'TS1E1R1U4':
 				var datum = chartDatum.a;
 				switch (optStr) {
 					case 't':
 						return 't';
 					case 'x1':
 						return 'x';
+					case 'e1':
+						return 'e';
+					case 'r1':
+						return 'r';
+					case 'u1':
+						return 'u';
+					case 'u2':
+						return 'up';
+					case 'u3':
+						return 'ui';
+					case 'u4':
+						return 'ud';
+					default:
+						return 'erro';
+				}
+			default:
+				var datum = chartDatum.a;
+				switch (optStr) {
+					case 't':
+						return 't';
+					case 'x1':
+						return 'x1';
+					case 'x2':
+						return 'x2';
 					case 'e1':
 						return 'e';
 					case 'r1':
@@ -17691,6 +18041,9 @@ var $author$project$DataConvert$fe1 = function (chartDatum) {
 		case 'TS1E1R1U1':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.e1);
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.e1);
 		default:
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.e1);
@@ -17702,6 +18055,9 @@ var $author$project$DataConvert$fr1 = function (chartDatum) {
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Nothing;
 		case 'TS1E1R1U1':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.r1);
+		case 'TS1E1R1U4':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.r1);
 		default:
@@ -17717,6 +18073,9 @@ var $author$project$DataConvert$ft = function (chartDatum) {
 		case 'TS1E1R1U1':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.t);
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.t);
 		default:
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.t);
@@ -17728,6 +18087,9 @@ var $author$project$DataConvert$fu1 = function (chartDatum) {
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Nothing;
 		case 'TS1E1R1U1':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.u1);
+		case 'TS1E1R1U4':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.u1);
 		default:
@@ -17743,6 +18105,9 @@ var $author$project$DataConvert$fu2 = function (chartDatum) {
 		case 'TS1E1R1U1':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Nothing;
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.u2);
 		default:
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.u2);
@@ -17756,6 +18121,9 @@ var $author$project$DataConvert$fu3 = function (chartDatum) {
 		case 'TS1E1R1U1':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Nothing;
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.u3);
 		default:
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.u3);
@@ -17769,6 +18137,9 @@ var $author$project$DataConvert$fu4 = function (chartDatum) {
 		case 'TS1E1R1U1':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Nothing;
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.u4);
 		default:
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.u4);
@@ -17782,9 +18153,28 @@ var $author$project$DataConvert$fx1 = function (chartDatum) {
 		case 'TS1E1R1U1':
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.x1);
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.x1);
 		default:
 			var datum = chartDatum.a;
 			return $elm$core$Maybe$Just(datum.x1);
+	}
+};
+var $author$project$DataConvert$fx2 = function (chartDatum) {
+	switch (chartDatum.$) {
+		case 'TS1':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Nothing;
+		case 'TS1E1R1U1':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Nothing;
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Nothing;
+		default:
+			var datum = chartDatum.a;
+			return $elm$core$Maybe$Just(datum.x2);
 	}
 };
 var $author$project$DataConvert$stringToAxisFunc = function (str) {
@@ -17793,6 +18183,8 @@ var $author$project$DataConvert$stringToAxisFunc = function (str) {
 			return $elm$core$Maybe$Just($author$project$DataConvert$ft);
 		case 'x1':
 			return $elm$core$Maybe$Just($author$project$DataConvert$fx1);
+		case 'x2':
+			return $elm$core$Maybe$Just($author$project$DataConvert$fx2);
 		case 'e1':
 			return $elm$core$Maybe$Just($author$project$DataConvert$fe1);
 		case 'r1':
@@ -21999,6 +22391,51 @@ var $terezka$elm_charts$Chart$yTicks = function (edits) {
 					toTicks(p)));
 		});
 };
+var $terezka$elm_charts$Chart$Attributes$domain = F2(
+	function (v, config) {
+		return _Utils_update(
+			config,
+			{domain: v});
+	});
+var $terezka$elm_charts$Chart$Attributes$range = F2(
+	function (v, config) {
+		return _Utils_update(
+			config,
+			{range: v});
+	});
+var $author$project$MyCharts$Chart$zoomAttrs = function (zoom) {
+	var width = 330;
+	var record = $gampleman$elm_visualization$Zoom$asRecord(zoom);
+	var scale = record.scale;
+	var x = record.translate.x;
+	var y = record.translate.y;
+	var height = 330;
+	var axisFunc = F3(
+		function (widthHeight, translation, iAxis) {
+			var range = iAxis.dataMax - iAxis.dataMin;
+			var trans = (translation * range) / (scale * widthHeight);
+			var newRange = range / scale;
+			var center = ((iAxis.dataMin + iAxis.dataMax) / 2.0) + (trans / 2);
+			var newMax = center + (newRange / 2);
+			var newMin = center - (newRange / 2);
+			return _Utils_update(
+				iAxis,
+				{max: newMax, min: newMin});
+		});
+	return _List_fromArray(
+		[
+			$terezka$elm_charts$Chart$Attributes$range(
+			_List_fromArray(
+				[
+					A2(axisFunc, width, -x)
+				])),
+			$terezka$elm_charts$Chart$Attributes$domain(
+			_List_fromArray(
+				[
+					A2(axisFunc, height, y)
+				]))
+		]);
+};
 var $author$project$MyCharts$Chart$view = F4(
 	function (model, msgToMainMsg, chartData, curves) {
 		var zoomModel = function ($) {
@@ -22007,27 +22444,33 @@ var $author$project$MyCharts$Chart$view = F4(
 		var evZoom = function ($) {
 			return $.zoom;
 		}(model);
+		var record = $gampleman$elm_visualization$Zoom$asRecord(evZoom);
+		var scale = record.scale;
+		var x = record.translate.x;
+		var y = record.translate.y;
 		return A2(
 			$terezka$elm_charts$Chart$chart,
-			_List_fromArray(
-				[
-					$terezka$elm_charts$Chart$Attributes$height(380),
-					$terezka$elm_charts$Chart$Attributes$width(400),
-					$terezka$elm_charts$Chart$Attributes$padding(
-					{bottom: 0, left: 0, right: 20, top: 10}),
-					$terezka$elm_charts$Chart$Attributes$margin(
-					{bottom: 20, left: 20, right: 0, top: 40}),
-					$terezka$elm_charts$Chart$Attributes$attrs(
-					_List_fromArray(
-						[
-							$gampleman$elm_visualization$Zoom$transform(evZoom)
-						])),
-					$terezka$elm_charts$Chart$Attributes$attrs(
-					A2(
-						$gampleman$elm_visualization$Zoom$events,
-						evZoom,
-						A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$MyCharts$Chart$EVZoomMsg)))
-				]),
+			_Utils_ap(
+				_List_fromArray(
+					[
+						$terezka$elm_charts$Chart$Attributes$height(380),
+						$terezka$elm_charts$Chart$Attributes$width(400),
+						$terezka$elm_charts$Chart$Attributes$padding(
+						{bottom: 0, left: 0, right: 20, top: 10}),
+						$terezka$elm_charts$Chart$Attributes$margin(
+						{bottom: 20, left: 50, right: 0, top: 40}),
+						$terezka$elm_charts$Chart$Attributes$attrs(
+						_List_fromArray(
+							[
+								$gampleman$elm_visualization$Zoom$transform(evZoom)
+							])),
+						$terezka$elm_charts$Chart$Attributes$attrs(
+						A2(
+							$gampleman$elm_visualization$Zoom$events,
+							evZoom,
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$MyCharts$Chart$EVZoomMsg)))
+					]),
+				$author$project$MyCharts$Chart$zoomAttrs(evZoom)),
 			_Utils_ap(
 				_List_fromArray(
 					[
@@ -22269,12 +22712,26 @@ var $author$project$MyCharts$Chart$Curve$view = F2(
 							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'r1', selStr),
 							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'u1', selStr)
 						]);
+				case 'TS1E1R1U4':
+					var datum = chartDatum.a;
+					return _List_fromArray(
+						[
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 't', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'x1', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'e1', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'r1', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'u1', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'u2', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'u3', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'u4', selStr)
+						]);
 				default:
 					var datum = chartDatum.a;
 					return _List_fromArray(
 						[
 							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 't', selStr),
 							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'x1', selStr),
+							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'x2', selStr),
 							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'e1', selStr),
 							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'r1', selStr),
 							A3($author$project$MyCharts$Chart$Curve$chartAxisOptionView2, chartDatum, 'u1', selStr),
@@ -22637,7 +23094,11 @@ var $mdgriffith$elm_ui$Element$moveDown = function (y) {
 		$mdgriffith$elm_ui$Internal$Model$MoveY(y));
 };
 var $author$project$ModelSystem$output = function (modelType) {
-	return $author$project$ModelSystem$Level$output;
+	if (modelType.$ === 'Level') {
+		return $author$project$ModelSystem$Level$output;
+	} else {
+		return $author$project$ModelSystem$Level2$output;
+	}
 };
 var $author$project$DataConvert$rsFromDatum = function (chartDatum) {
 	switch (chartDatum.$) {
@@ -22645,6 +23106,14 @@ var $author$project$DataConvert$rsFromDatum = function (chartDatum) {
 			var datum = chartDatum.a;
 			return _List_Nil;
 		case 'TS1E1R1U1':
+			var datum = chartDatum.a;
+			return _List_fromArray(
+				[
+					function ($) {
+					return $.r1;
+				}(datum)
+				]);
+		case 'TS1E1R1U4':
 			var datum = chartDatum.a;
 			return _List_fromArray(
 				[
@@ -25378,10 +25847,277 @@ var $author$project$ModelSystem$Level$simulation = F4(
 				viewBox: rectBB2
 			});
 	});
+var $author$project$ModelSystem$Level2$extendP2d = F3(
+	function (p, dx, dy) {
+		var py = $ianmackenzie$elm_units$Pixels$toFloat(
+			$ianmackenzie$elm_geometry$Point2d$yCoordinate(p));
+		var px = $ianmackenzie$elm_units$Pixels$toFloat(
+			$ianmackenzie$elm_geometry$Point2d$xCoordinate(p));
+		return A2($ianmackenzie$elm_geometry$Point2d$pixels, px + dx, py + dy);
+	});
+var $ianmackenzie$elm_geometry$Point2d$toPixels = function (_v0) {
+	var pointCoordinates = _v0.a;
+	return pointCoordinates;
+};
+var $author$project$ModelSystem$Level2$simulation = F4(
+	function (xs, rs, us, model) {
+		var zangleb = $ianmackenzie$elm_units$Angle$degrees(90.0);
+		var yini = 100.0;
+		var xini = 100.0;
+		var waterFall = 350.0;
+		var reference = A2(
+			$elm$core$Maybe$withDefault,
+			0.0,
+			$elm$core$List$head(rs));
+		var pa = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini, yini);
+		var pra22 = pa;
+		var prect1 = pa;
+		var newWaterFall = 50;
+		var newOrigin = A2($ianmackenzie$elm_geometry$Point2d$pixels, 0, -400);
+		var viewBox = A2(
+			$ianmackenzie$elm_geometry$Rectangle2d$from,
+			newOrigin,
+			A2($ianmackenzie$elm_geometry$Point2d$pixels, 800, 450));
+		var nSegs = 15;
+		var levelmax = 20.0;
+		var lbase = 200.0;
+		var input = A2(
+			$elm$core$Maybe$withDefault,
+			0.0,
+			$elm$core$List$head(us));
+		var input2 = A2($elm$core$Basics$max, input, 0.0);
+		var hbase = 300.0;
+		var h = hbase;
+		var pc = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini, yini + h);
+		var esc = 30.0;
+		var e = 10.0;
+		var p3 = A3($author$project$ModelSystem$Level2$extendP2d, pa, -e, -e);
+		var p8 = A3($author$project$ModelSystem$Level2$extendP2d, pc, (-e) - esc, 0.0);
+		var p9 = A3($author$project$ModelSystem$Level2$extendP2d, p8, 0.0, e);
+		var ap2 = function ($) {
+			return $.ap2;
+		}(model);
+		var ap1 = function ($) {
+			return $.ap1;
+		}(model);
+		var qo1 = input2 / ap1;
+		var angleb = $ianmackenzie$elm_units$Angle$degrees(90.0);
+		var anglea = $ianmackenzie$elm_units$Angle$degrees(90.0);
+		var ag2 = function ($) {
+			return $.ag2;
+		}(model);
+		var l2 = lbase * $elm$core$Basics$sqrt(ag2);
+		var ag1 = function ($) {
+			return $.ag1;
+		}(model);
+		var l1 = lbase * $elm$core$Basics$sqrt(ag1);
+		var pb = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini + l1, yini);
+		var p1 = A3($author$project$ModelSystem$Level2$extendP2d, pb, esc + e, 0.0);
+		var p2 = A3($author$project$ModelSystem$Level2$extendP2d, p1, 0.0, -e);
+		var prc1 = p1;
+		var zpixels = $ianmackenzie$elm_geometry$Point2d$toPixels(p1);
+		var xini2 = zpixels.x - 30;
+		var yini2 = zpixels.y - 40;
+		var za = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini2, yini2 - h);
+		var z3 = A3($author$project$ModelSystem$Level2$extendP2d, za, -e, -e);
+		var zrect1 = za;
+		var zb = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini2 + l2, yini2 - h);
+		var z1 = A3($author$project$ModelSystem$Level2$extendP2d, zb, esc + e, 0.0);
+		var z2 = A3($author$project$ModelSystem$Level2$extendP2d, z1, 0.0, -e);
+		var zrc1 = z1;
+		var zrb1 = zb;
+		var zc = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini2, yini2);
+		var z4 = A3($author$project$ModelSystem$Level2$extendP2d, zc, -e, e);
+		var z7 = A3($author$project$ModelSystem$Level2$extendP2d, z4, e, 0.0);
+		var zoly1 = $ianmackenzie$elm_geometry$Polygon2d$singleLoop(
+			_List_fromArray(
+				[za, z1, z2, z3, z4, z7]));
+		var zd = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini2 + l2, yini2);
+		var z10 = A3($author$project$ModelSystem$Level2$extendP2d, zd, e, e);
+		var z9 = A3($author$project$ModelSystem$Level2$extendP2d, zd, 0.0, e);
+		var prb1 = pb;
+		var pd = A2($ianmackenzie$elm_geometry$Point2d$pixels, xini + l1, yini + h);
+		var p10 = A3($author$project$ModelSystem$Level2$extendP2d, pd, e, e);
+		var abbase = 20.0;
+		var ab2 = (3 * abbase) * $elm$core$Basics$sqrt(ap2);
+		var z11 = A3($author$project$ModelSystem$Level2$extendP2d, zb, e, ab2 + e);
+		var z12 = A3($author$project$ModelSystem$Level2$extendP2d, z11, esc, 0.0);
+		var z13 = A3($author$project$ModelSystem$Level2$extendP2d, z12, 0.0, -e);
+		var z14 = A3($author$project$ModelSystem$Level2$extendP2d, zb, 0.0, ab2);
+		var zoly2 = $ianmackenzie$elm_geometry$Polygon2d$singleLoop(
+			_List_fromArray(
+				[z9, z10, z11, z12, z13, z14, z9]));
+		var ab1 = (3 * abbase) * $elm$core$Basics$sqrt(ap1);
+		var hqo1 = (_Utils_cmp(qo1, ab1) > 0) ? ab1 : ((qo1 < 0.0) ? 0.0 : qo1);
+		var p11 = A3($author$project$ModelSystem$Level2$extendP2d, pb, e, ab1 + e);
+		var p12 = A3($author$project$ModelSystem$Level2$extendP2d, p11, esc, 0.0);
+		var p13 = A3($author$project$ModelSystem$Level2$extendP2d, p12, 0.0, -e);
+		var p14 = A3($author$project$ModelSystem$Level2$extendP2d, pb, 0.0, ab1);
+		var poly2 = $ianmackenzie$elm_geometry$Polygon2d$singleLoop(
+			_List_fromArray(
+				[pc, p8, p9, p10, p11, p12, p13, p14, pd]));
+		var p4 = A3($author$project$ModelSystem$Level2$extendP2d, pc, -e, (-e) - ab1);
+		var p5 = A3($author$project$ModelSystem$Level2$extendP2d, p4, -esc, 0.0);
+		var p6 = A3($author$project$ModelSystem$Level2$extendP2d, p5, 0.0, e);
+		var p7 = A3($author$project$ModelSystem$Level2$extendP2d, p6, e + esc, 0.0);
+		var pra11 = p6;
+		var pra12 = A3($author$project$ModelSystem$Level2$extendP2d, pra11, esc + e, hqo1);
+		var parca1 = pra12;
+		var pra21 = A3($author$project$ModelSystem$Level2$extendP2d, pra11, (esc + e) + hqo1, 0.0);
+		var parca2 = pra21;
+		var arca = A3($ianmackenzie$elm_geometry$Arc2d$from, parca2, parca1, anglea);
+		var arcAsPolylineSegsA = A2($ianmackenzie$elm_geometry$Arc2d$segments, nSegs, arca);
+		var polya = $ianmackenzie$elm_geometry$Polygon2d$singleLoop(
+			A2(
+				$elm$core$List$cons,
+				$ianmackenzie$elm_geometry$Arc2d$centerPoint(arca),
+				$ianmackenzie$elm_geometry$Polyline2d$vertices(arcAsPolylineSegsA)));
+		var recta2 = A2($ianmackenzie$elm_geometry$Rectangle2d$from, pra21, pra22);
+		var recta1 = A2($ianmackenzie$elm_geometry$Rectangle2d$from, pra11, pra12);
+		var poly1 = $ianmackenzie$elm_geometry$Polygon2d$singleLoop(
+			_List_fromArray(
+				[pa, p1, p2, p3, p4, p5, p6, p7]));
+		var _v0 = function () {
+			if (xs.b && xs.b.b) {
+				var x1 = xs.a;
+				var _v2 = xs.b;
+				var x2 = _v2.a;
+				var ls = _v2.b;
+				return _Utils_Tuple2(x1, x2);
+			} else {
+				return _Utils_Tuple2(0.0, 0.0);
+			}
+		}();
+		var level1 = _v0.a;
+		var level2 = _v0.b;
+		var level1PixelAux = (level1 / levelmax) * h;
+		var level1Pixel = A2($elm$core$Basics$min, level1PixelAux, h);
+		var hrb1 = A2(
+			$elm$core$Maybe$withDefault,
+			0.0,
+			$elm$core$List$minimum(
+				_List_fromArray(
+					[level1Pixel, ab1])));
+		var parcb1 = A3($author$project$ModelSystem$Level2$extendP2d, p1, 0.0, hrb1);
+		var parcb2 = A3($author$project$ModelSystem$Level2$extendP2d, p1, hrb1, 0.0);
+		var arcb = A3($ianmackenzie$elm_geometry$Arc2d$from, parcb2, parcb1, angleb);
+		var arcAsPolylineSegsB = A2($ianmackenzie$elm_geometry$Arc2d$segments, nSegs, arcb);
+		var polyb = $ianmackenzie$elm_geometry$Polygon2d$singleLoop(
+			A2(
+				$elm$core$List$cons,
+				$ianmackenzie$elm_geometry$Arc2d$centerPoint(arcb),
+				$ianmackenzie$elm_geometry$Polyline2d$vertices(arcAsPolylineSegsB)));
+		var prb2 = A3($author$project$ModelSystem$Level2$extendP2d, prb1, e + esc, hrb1);
+		var rectb = A2($ianmackenzie$elm_geometry$Rectangle2d$from, prb1, prb2);
+		var prc2 = A3($author$project$ModelSystem$Level2$extendP2d, prc1, hrb1, -waterFall);
+		var points = _List_fromArray(
+			[pa, pb, pc, pd, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, parca1, parca2, prc1, prc2, parcb1, parcb2]);
+		var rectBB = A2($ianmackenzie$elm_geometry$Rectangle2d$from, prc2, p9);
+		var boundingBox = $ianmackenzie$elm_geometry$Rectangle2d$boundingBox(rectBB);
+		var rectBB2 = $ianmackenzie$elm_geometry$Rectangle2d$fromBoundingBox(boundingBox);
+		var rectc = A2($ianmackenzie$elm_geometry$Rectangle2d$from, prc1, prc2);
+		var prect2 = A3($author$project$ModelSystem$Level2$extendP2d, prect1, l1, level1Pixel);
+		var rect = A2($ianmackenzie$elm_geometry$Rectangle2d$from, prect1, prect2);
+		var level2PixelAux = (level2 / levelmax) * h;
+		var level2Pixel = A2($elm$core$Basics$min, level2PixelAux, h);
+		var zhrb1 = A2(
+			$elm$core$Maybe$withDefault,
+			0.0,
+			$elm$core$List$minimum(
+				_List_fromArray(
+					[level2Pixel, ab2])));
+		var zarcb1 = A3($author$project$ModelSystem$Level2$extendP2d, z1, 0.0, zhrb1);
+		var zarcb2 = A3($author$project$ModelSystem$Level2$extendP2d, z1, zhrb1, 0.0);
+		var zarcb = A3($ianmackenzie$elm_geometry$Arc2d$from, zarcb2, zarcb1, zangleb);
+		var zarcAsPolylineSegsB = A2($ianmackenzie$elm_geometry$Arc2d$segments, nSegs, zarcb);
+		var zolyb = $ianmackenzie$elm_geometry$Polygon2d$singleLoop(
+			A2(
+				$elm$core$List$cons,
+				$ianmackenzie$elm_geometry$Arc2d$centerPoint(zarcb),
+				$ianmackenzie$elm_geometry$Polyline2d$vertices(zarcAsPolylineSegsB)));
+		var zrb2 = A3($author$project$ModelSystem$Level2$extendP2d, zrb1, e + esc, zhrb1);
+		var points2 = _List_fromArray(
+			[za, zb, zc, zd, z1, z2, z3, z4, z7, z9, z10, z11, z12, z13, z14, zrb1, zrb2]);
+		var zrectb = A2($ianmackenzie$elm_geometry$Rectangle2d$from, zrb1, zrb2);
+		var zrc2 = A3($author$project$ModelSystem$Level2$extendP2d, zrc1, zhrb1, -newWaterFall);
+		var zrectBB = A2($ianmackenzie$elm_geometry$Rectangle2d$from, zrc2, p9);
+		var zboundingBox = $ianmackenzie$elm_geometry$Rectangle2d$boundingBox(zrectBB);
+		var zrectBB2 = $ianmackenzie$elm_geometry$Rectangle2d$fromBoundingBox(zboundingBox);
+		var zrectc = A2($ianmackenzie$elm_geometry$Rectangle2d$from, zrc1, zrc2);
+		var zrect2 = A3($author$project$ModelSystem$Level2$extendP2d, zrect1, l2, level2Pixel);
+		var zrect = A2($ianmackenzie$elm_geometry$Rectangle2d$from, zrect1, zrect2);
+		return $author$project$Drawing2d$draw(
+			{
+				entities: _List_fromArray(
+					[
+						A2(
+						$author$project$Drawing2d$group,
+						_List_fromArray(
+							[
+								$author$project$Drawing2d$fillColor($avh4$elm_color$Color$lightBlue),
+								$author$project$Drawing2d$strokeWidth(
+								$ianmackenzie$elm_units$Pixels$float(0.0))
+							]),
+						_List_fromArray(
+							[
+								A2($author$project$Drawing2d$rectangle, _List_Nil, rect),
+								A2($author$project$Drawing2d$rectangle, _List_Nil, rectb),
+								A2($author$project$Drawing2d$rectangle, _List_Nil, recta1),
+								A2($author$project$Drawing2d$rectangle, _List_Nil, recta2),
+								A2($author$project$Drawing2d$rectangle, _List_Nil, rectc),
+								A2($author$project$Drawing2d$polygon, _List_Nil, polya),
+								A2($author$project$Drawing2d$polygon, _List_Nil, polyb)
+							])),
+						A2(
+						$author$project$Drawing2d$group,
+						_List_fromArray(
+							[
+								$author$project$Drawing2d$fillColor($avh4$elm_color$Color$grey)
+							]),
+						_List_fromArray(
+							[
+								A2($author$project$Drawing2d$polygon, _List_Nil, poly1),
+								A2($author$project$Drawing2d$polygon, _List_Nil, poly2)
+							])),
+						A2(
+						$author$project$Drawing2d$group,
+						_List_fromArray(
+							[
+								$author$project$Drawing2d$fillColor($avh4$elm_color$Color$lightBlue),
+								$author$project$Drawing2d$strokeWidth(
+								$ianmackenzie$elm_units$Pixels$float(0.0))
+							]),
+						_List_fromArray(
+							[
+								A2($author$project$Drawing2d$rectangle, _List_Nil, zrect),
+								A2($author$project$Drawing2d$rectangle, _List_Nil, zrectb),
+								A2($author$project$Drawing2d$rectangle, _List_Nil, zrectc),
+								A2($author$project$Drawing2d$polygon, _List_Nil, zolyb)
+							])),
+						A2(
+						$author$project$Drawing2d$group,
+						_List_fromArray(
+							[
+								$author$project$Drawing2d$fillColor($avh4$elm_color$Color$grey)
+							]),
+						_List_fromArray(
+							[
+								A2($author$project$Drawing2d$polygon, _List_Nil, zoly1),
+								A2($author$project$Drawing2d$polygon, _List_Nil, zoly2)
+							]))
+					]),
+				viewBox: zrectBB2
+			});
+	});
 var $author$project$ModelSystem$simulation = F4(
 	function (xs, rs, us, model) {
-		var levelModel = model.a;
-		return A4($author$project$ModelSystem$Level$simulation, xs, rs, us, levelModel);
+		if (model.$ === 'LevelModel') {
+			var levelModel = model.a;
+			return A4($author$project$ModelSystem$Level$simulation, xs, rs, us, levelModel);
+		} else {
+			var level2Model = model.a;
+			return A4($author$project$ModelSystem$Level2$simulation, xs, rs, us, level2Model);
+		}
 	});
 var $author$project$DataConvert$usFromDatum = function (chartDatum) {
 	switch (chartDatum.$) {
@@ -25394,6 +26130,23 @@ var $author$project$DataConvert$usFromDatum = function (chartDatum) {
 				[
 					function ($) {
 					return $.u1;
+				}(datum)
+				]);
+		case 'TS1E1R1U4':
+			var datum = chartDatum.a;
+			return _List_fromArray(
+				[
+					function ($) {
+					return $.u1;
+				}(datum),
+					function ($) {
+					return $.u2;
+				}(datum),
+					function ($) {
+					return $.u3;
+				}(datum),
+					function ($) {
+					return $.u4;
 				}(datum)
 				]);
 		default:
@@ -26430,42 +27183,9 @@ var $author$project$Controller$view = F2(
 			pidModel,
 			A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PidMsg));
 	});
-var $author$project$EdoSolver$Tfim = function (a) {
-	return {$: 'Tfim', a: a};
+var $author$project$ModelSystem$Level2Msg = function (a) {
+	return {$: 'Level2Msg', a: a};
 };
-var $author$project$EdoSolver$Tini = function (a) {
-	return {$: 'Tini', a: a};
-};
-var $author$project$EdoSolver$view = F2(
-	function (edoIStates, msgToMainMsg) {
-		var tiniStr = function ($) {
-			return $.tiniStr;
-		}(edoIStates);
-		var tfimStr = function ($) {
-			return $.tfimStr;
-		}(edoIStates);
-		return A2(
-			$mdgriffith$elm_ui$Element$column,
-			_List_fromArray(
-				[
-					$mdgriffith$elm_ui$Element$spacing(10),
-					$mdgriffith$elm_ui$Element$alignTop
-				]),
-			_List_fromArray(
-				[
-					$author$project$UI$heading('ODE'),
-					A3(
-					$author$project$UI$textField,
-					tiniStr,
-					'Tini ',
-					A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$EdoSolver$Tini)),
-					A3(
-					$author$project$UI$textField,
-					tfimStr,
-					'Tfin',
-					A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$EdoSolver$Tfim))
-				]));
-	});
 var $author$project$ModelSystem$LevelMsg = function (a) {
 	return {$: 'LevelMsg', a: a};
 };
@@ -26545,13 +27265,120 @@ var $author$project$ModelSystem$Level$view = F2(
 						]))
 				]));
 	});
+var $author$project$ModelSystem$Level2$Ag1 = function (a) {
+	return {$: 'Ag1', a: a};
+};
+var $author$project$ModelSystem$Level2$Ag2 = function (a) {
+	return {$: 'Ag2', a: a};
+};
+var $author$project$ModelSystem$Level2$Ap1 = function (a) {
+	return {$: 'Ap1', a: a};
+};
+var $author$project$ModelSystem$Level2$Ap2 = function (a) {
+	return {$: 'Ap2', a: a};
+};
+var $author$project$ModelSystem$Level2$H01 = function (a) {
+	return {$: 'H01', a: a};
+};
+var $author$project$ModelSystem$Level2$H02 = function (a) {
+	return {$: 'H02', a: a};
+};
+var $author$project$ModelSystem$Level2$view = F2(
+	function (model, msgToMainMsg) {
+		var h02Str = function ($) {
+			return $.h02Str;
+		}(model);
+		var h01Str = function ($) {
+			return $.h01Str;
+		}(model);
+		var ap2Str = function ($) {
+			return $.ap2Str;
+		}(model);
+		var ap1Str = function ($) {
+			return $.ap1Str;
+		}(model);
+		var ag2Str = function ($) {
+			return $.ag2Str;
+		}(model);
+		var ag1Str = function ($) {
+			return $.ag1Str;
+		}(model);
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing(10),
+					$mdgriffith$elm_ui$Element$padding(20),
+					$mdgriffith$elm_ui$Element$centerX
+				]),
+			_List_fromArray(
+				[
+					$author$project$UI$heading('Level 2'),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing(35)
+						]),
+					_List_fromArray(
+						[
+							A3(
+							$author$project$UI$textField,
+							h01Str,
+							'H1ini',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$Level2$H01)),
+							A3(
+							$author$project$UI$textField,
+							ag1Str,
+							'A1 ',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$Level2$Ag1)),
+							A3(
+							$author$project$UI$textField,
+							ap1Str,
+							'a1 ',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$Level2$Ap1))
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing(35)
+						]),
+					_List_fromArray(
+						[
+							A3(
+							$author$project$UI$textField,
+							h02Str,
+							'H2ini',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$Level2$H02)),
+							A3(
+							$author$project$UI$textField,
+							ag2Str,
+							'A2 ',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$Level2$Ag2)),
+							A3(
+							$author$project$UI$textField,
+							ap2Str,
+							'a2 ',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$Level2$Ap2))
+						]))
+				]));
+	});
 var $author$project$ModelSystem$view = F2(
 	function (model, msgToMainMsg) {
-		var levelModel = model.a;
-		return A2(
-			$author$project$ModelSystem$Level$view,
-			levelModel,
-			A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$LevelMsg));
+		if (model.$ === 'LevelModel') {
+			var levelModel = model.a;
+			return A2(
+				$author$project$ModelSystem$Level$view,
+				levelModel,
+				A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$LevelMsg));
+		} else {
+			var level2Model = model.a;
+			return A2(
+				$author$project$ModelSystem$Level2$view,
+				level2Model,
+				A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$ModelSystem$Level2Msg));
+		}
 	});
 var $author$project$Reference$Step1Msg = function (a) {
 	return {$: 'Step1Msg', a: a};
@@ -26912,6 +27739,42 @@ var $author$project$UI$view = function (children) {
 				]),
 			children));
 };
+var $author$project$EdoSolver$Tfim = function (a) {
+	return {$: 'Tfim', a: a};
+};
+var $author$project$EdoSolver$Tini = function (a) {
+	return {$: 'Tini', a: a};
+};
+var $author$project$EdoSolver$view2 = F2(
+	function (edoIStates, msgToMainMsg) {
+		var tiniStr = function ($) {
+			return $.tiniStr;
+		}(edoIStates);
+		var tfimStr = function ($) {
+			return $.tfimStr;
+		}(edoIStates);
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing(0),
+					$mdgriffith$elm_ui$Element$alignTop,
+					$mdgriffith$elm_ui$Element$moveUp(5)
+				]),
+			_List_fromArray(
+				[
+					A3(
+					$author$project$UI$textField,
+					tiniStr,
+					'Tini ',
+					A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$EdoSolver$Tini)),
+					A3(
+					$author$project$UI$textField,
+					tfimStr,
+					'Tfin',
+					A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$EdoSolver$Tfim))
+				]));
+	});
 var $author$project$Main$view = function (bigModel) {
 	var model = $author$project$Main$modelFromBigModel(bigModel);
 	var modelSystemModel = function ($) {
@@ -27000,26 +27863,14 @@ var $author$project$Main$view = function (bigModel) {
 							$mdgriffith$elm_ui$Element$column,
 							_List_fromArray(
 								[
-									$mdgriffith$elm_ui$Element$spacing(5),
+									$mdgriffith$elm_ui$Element$spacing(0),
 									$mdgriffith$elm_ui$Element$alignTop,
 									$mdgriffith$elm_ui$Element$padding(0),
 									$mdgriffith$elm_ui$Element$alignLeft
 								]),
 							_List_fromArray(
 								[
-									A2(
-									$mdgriffith$elm_ui$Element$row,
-									_List_fromArray(
-										[
-											$mdgriffith$elm_ui$Element$spacing(50),
-											$mdgriffith$elm_ui$Element$padding(10),
-											$mdgriffith$elm_ui$Element$centerX
-										]),
-									_List_fromArray(
-										[
-											A2($author$project$EdoSolver$view, edoIStates, $author$project$Main$EdoMsg),
-											A2($author$project$ModelSystem$view, modelSystemModel, $author$project$Main$ModelSystemMsg)
-										])),
+									A2($author$project$ModelSystem$view, modelSystemModel, $author$project$Main$ModelSystemMsg),
 									A2($author$project$Controller$view, controlModel, $author$project$Main$ControlMsg),
 									A2($author$project$Reference$view, refModel, $author$project$Main$RefMsg),
 									A2(
@@ -27027,11 +27878,12 @@ var $author$project$Main$view = function (bigModel) {
 									_List_fromArray(
 										[
 											$mdgriffith$elm_ui$Element$centerX,
-											$mdgriffith$elm_ui$Element$spacing(50),
-											$mdgriffith$elm_ui$Element$moveDown(10)
+											$mdgriffith$elm_ui$Element$spacing(40),
+											$mdgriffith$elm_ui$Element$moveDown(5)
 										]),
 									_List_fromArray(
 										[
+											A2($author$project$EdoSolver$view2, edoIStates, $author$project$Main$EdoMsg),
 											A2(
 											$author$project$UI$button,
 											'RunODE',
@@ -27048,7 +27900,14 @@ var $author$project$Main$view = function (bigModel) {
 								[
 									$mdgriffith$elm_ui$Element$alignRight,
 									$mdgriffith$elm_ui$Element$centerY,
-									$mdgriffith$elm_ui$Element$padding(40)
+									$mdgriffith$elm_ui$Element$padding(10),
+									$mdgriffith$elm_ui$Element$width(
+									A2($mdgriffith$elm_ui$Element$minimum, 400, $mdgriffith$elm_ui$Element$shrink)),
+									$mdgriffith$elm_ui$Element$height(
+									A2(
+										$mdgriffith$elm_ui$Element$maximum,
+										400,
+										A2($mdgriffith$elm_ui$Element$minimum, 400, $mdgriffith$elm_ui$Element$fill)))
 								]),
 							$mdgriffith$elm_ui$Element$html(
 								A4($author$project$ModelSystem$simulation, xs, rs, us, modelSystemModel)))

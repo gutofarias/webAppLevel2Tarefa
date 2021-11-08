@@ -77,7 +77,7 @@ type alias Model =
 init : () -> (BigModel, Cmd Msg) 
 init () =
     let
-        modelSystemType = MS.Level
+        modelSystemType = MS.Level2
         edoParam = MS.initEdoParam modelSystemType
         edoIStates = Edo.edoIStatesFromEdoParam edoParam
     in
@@ -349,19 +349,10 @@ view bigModel =
                       ]
                     
                     [ 
-                      E.column [E.spacing 5, E.alignTop, E.padding 0, E.alignLeft] 
+                      E.column [E.spacing 0, E.alignTop, E.padding 0, E.alignLeft] 
                           
-                        [ E.row [ E.spacing 50
-                                , E.padding 10
-                                , E.centerX
-                                -- , E.explain Debug.todo
-                                ]
-                              
-                            [ Edo.view edoIStates
-                                  (EdoMsg) 
-                            , MS.view modelSystemModel
-                                (ModelSystemMsg)  
-                            ]
+                        [ MS.view modelSystemModel
+                            (ModelSystemMsg)  
                               
                         , Control.view controlModel
                             (ControlMsg)
@@ -369,8 +360,10 @@ view bigModel =
                         , Ref.view refModel
                             (RefMsg)
                                 
-                        , E.row [E.centerX, E.spacing 50, E.moveDown 10]
-                            [ UI.button "RunODE" (Just RunEdo)
+                        , E.row [E.centerX, E.spacing 40, E.moveDown 5]
+                            [ Edo.view2 edoIStates
+                                  (EdoMsg) 
+                            , UI.button "RunODE" (Just RunEdo)
                             , UI.button "Animation" (Just RunAnimation)
                             ]
                         ]
@@ -378,10 +371,17 @@ view bigModel =
                     , E.el [ E.alignRight
                            -- , E.width E.fill
                            , E.centerY
-                           , E.padding 40
+                           , E.padding 10
                            -- , E.explain Debug.todo
+                           , E.width 
+                                 (E.shrink
+                                 |> E.minimum 400)
+                           , E.height 
+                                 (E.fill
+                                 |> E.minimum 400
+                                 |> E.maximum 400)
                            ]  
-                        (E.html <| MS.simulation xs rs us modelSystemModel)
+                               (E.html <| MS.simulation xs rs us modelSystemModel)
                     ] 
               ]
                 ++

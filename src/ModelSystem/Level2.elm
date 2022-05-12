@@ -250,7 +250,7 @@ system model us t state =
        ap1 = .ap1 model
        ag2 = .ag2 model
        ap2 = .ap2 model
-       g = 9.28
+       g = 9.81
        uAux = Maybe.withDefault 0.0 (List.head us)
        u = if (uAux<0.0) then 0.0 else uAux
     in

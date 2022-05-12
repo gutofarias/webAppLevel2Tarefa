@@ -187,7 +187,8 @@ initEdoParam : Edo.EdoParam
 initEdoParam = 
     { tempo = 0.0
     , tfim = 10.0
-    , passo = 0.001
+    -- , passo = 0.001
+    , passo = 0.1
     , relPassoSaida = 100
     , controlMemory = []
     , solver = Edo.rungeKutta }
@@ -199,7 +200,8 @@ initEdoParam =
 
 control : Control.Model
 control = 
-    Control.init Control.PID
+    -- Control.init Control.PID
+    Control.init Control.PIDeq
 
                  
 ------------------------------------------------

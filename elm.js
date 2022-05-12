@@ -5235,12 +5235,21 @@ var $author$project$Controller$PID = {$: 'PID'};
 var $author$project$Controller$PidModel = function (a) {
 	return {$: 'PidModel', a: a};
 };
+var $author$project$Controller$PideqModel = function (a) {
+	return {$: 'PideqModel', a: a};
+};
 var $author$project$Controller$PID$init = {kd: 0.0, kdStr: '0', ki: 0.0, kiStr: '0', kp: 0.0, kpStr: '0'};
+var $author$project$Controller$PIDeq$init = {kd: 0.0, kdStr: '0', ki: 0.0, kiStr: '0', kp: 0.0, kpStr: '0', ueq: 0.0, ueqStr: '0'};
 var $author$project$Controller$init = function (controlType) {
-	return $author$project$Controller$PidModel($author$project$Controller$PID$init);
+	if (controlType.$ === 'PID') {
+		return $author$project$Controller$PidModel($author$project$Controller$PID$init);
+	} else {
+		return $author$project$Controller$PideqModel($author$project$Controller$PIDeq$init);
+	}
 };
 var $author$project$ModelSystem$Level$control = $author$project$Controller$init($author$project$Controller$PID);
-var $author$project$ModelSystem$Level2$control = $author$project$Controller$init($author$project$Controller$PID);
+var $author$project$Controller$PIDeq = {$: 'PIDeq'};
+var $author$project$ModelSystem$Level2$control = $author$project$Controller$init($author$project$Controller$PIDeq);
 var $author$project$ModelSystem$control = function (modelType) {
 	if (modelType.$ === 'Level') {
 		return $author$project$ModelSystem$Level$control;
@@ -5499,7 +5508,7 @@ var $author$project$EdoSolver$rungeKutta = F4(
 						k4))));
 	});
 var $author$project$ModelSystem$Level$initEdoParam = {controlMemory: _List_Nil, passo: 0.001, relPassoSaida: 100, solver: $author$project$EdoSolver$rungeKutta, tempo: 0.0, tfim: 10.0};
-var $author$project$ModelSystem$Level2$initEdoParam = {controlMemory: _List_Nil, passo: 0.001, relPassoSaida: 100, solver: $author$project$EdoSolver$rungeKutta, tempo: 0.0, tfim: 10.0};
+var $author$project$ModelSystem$Level2$initEdoParam = {controlMemory: _List_Nil, passo: 0.1, relPassoSaida: 100, solver: $author$project$EdoSolver$rungeKutta, tempo: 0.0, tfim: 10.0};
 var $author$project$ModelSystem$initEdoParam = function (modelType) {
 	if (modelType.$ === 'Level') {
 		return $author$project$ModelSystem$Level$initEdoParam;
@@ -6519,9 +6528,80 @@ var $author$project$Controller$PID$controllerFromModel = function (model) {
 	}(model);
 	return A3($author$project$Controller$PID$pid, kp, ki, kd);
 };
+var $author$project$Controller$PIDeq$pideq = F9(
+	function (kp, ki, kd, ueq, mem, errors, passo, tempo, xs) {
+		var filterParam = 0.05;
+		var fP = 1.0 / filterParam;
+		var error = A2(
+			$elm$core$Maybe$withDefault,
+			0.0,
+			$elm$core$List$head(errors));
+		var errorfsist = F2(
+			function (t, xs2) {
+				if (xs2.b && (!xs2.b.b)) {
+					var x = xs2.a;
+					return A2($elm$core$List$cons, ((-fP) * x) - ((fP * fP) * error), _List_Nil);
+				} else {
+					return A2($elm$core$List$cons, (-fP) * error, _List_Nil);
+				}
+			});
+		var prop = kp * error;
+		var _v0 = function () {
+			if ((mem.b && mem.b.b) && (!mem.b.b.b)) {
+				var err_mem = mem.a;
+				var _v2 = mem.b;
+				var int_mem = _v2.a;
+				return _Utils_Tuple2(err_mem, int_mem);
+			} else {
+				return _Utils_Tuple2((-fP) * error, 0.0);
+			}
+		}();
+		var error_state = _v0.a;
+		var integral_mem = _v0.b;
+		var derror_aux = A2(
+			$elm$core$Maybe$withDefault,
+			(-fP) * error,
+			$elm$core$List$head(
+				A4(
+					$author$project$EdoSolver$eulerSolver,
+					errorfsist,
+					passo,
+					tempo,
+					_List_fromArray(
+						[error_state]))));
+		var derror = derror_aux + (fP * error);
+		var dif = kd * derror;
+		var integral_error = integral_mem + (error * passo);
+		var integral = ki * integral_error;
+		return _Utils_Tuple2(
+			_List_fromArray(
+				[((prop + integral) + dif) + ueq, prop, integral, dif]),
+			_List_fromArray(
+				[derror_aux, integral_error]));
+	});
+var $author$project$Controller$PIDeq$controllerFromModel = function (model) {
+	var ueq = function ($) {
+		return $.ueq;
+	}(model);
+	var kp = function ($) {
+		return $.kp;
+	}(model);
+	var ki = function ($) {
+		return $.ki;
+	}(model);
+	var kd = function ($) {
+		return $.kd;
+	}(model);
+	return A4($author$project$Controller$PIDeq$pideq, kp, ki, kd, ueq);
+};
 var $author$project$Controller$controllerFromModel = function (model) {
-	var pidModel = model.a;
-	return $author$project$Controller$PID$controllerFromModel(pidModel);
+	if (model.$ === 'PidModel') {
+		var pidModel = model.a;
+		return $author$project$Controller$PID$controllerFromModel(pidModel);
+	} else {
+		var pideqModel = model.a;
+		return $author$project$Controller$PIDeq$controllerFromModel(pideqModel);
+	}
 };
 var $elm$core$Basics$min = F2(
 	function (x, y) {
@@ -6897,7 +6977,7 @@ var $author$project$ModelSystem$Level2$system = F4(
 			0.0,
 			$elm$core$List$head(us));
 		var u = (uAux < 0.0) ? 0.0 : uAux;
-		var g = 9.28;
+		var g = 9.81;
 		var ap2 = function ($) {
 			return $.ap2;
 		}(model);
@@ -7033,12 +7113,72 @@ var $author$project$Controller$PID$update = F2(
 					{kd: val, kdStr: valueStr});
 		}
 	});
+var $author$project$Controller$PIDeq$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'PidKp':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var kp = function ($) {
+					return $.kp;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, kp, maybeVal);
+				return _Utils_update(
+					model,
+					{kp: val, kpStr: valueStr});
+			case 'PidKi':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var ki = function ($) {
+					return $.ki;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, ki, maybeVal);
+				return _Utils_update(
+					model,
+					{ki: val, kiStr: valueStr});
+			case 'PidKd':
+				var valueStr = msg.a;
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var kd = function ($) {
+					return $.kd;
+				}(model);
+				var val = A2($elm$core$Maybe$withDefault, kd, maybeVal);
+				return _Utils_update(
+					model,
+					{kd: val, kdStr: valueStr});
+			default:
+				var valueStr = msg.a;
+				var ueq = function ($) {
+					return $.ueq;
+				}(model);
+				var maybeVal = $elm$core$String$toFloat(valueStr);
+				var val = A2($elm$core$Maybe$withDefault, ueq, maybeVal);
+				return _Utils_update(
+					model,
+					{ueq: val, ueqStr: valueStr});
+		}
+	});
 var $author$project$Controller$update = F2(
 	function (msg, model) {
-		var pidMsg = msg.a;
-		var pidModel = model.a;
-		return $author$project$Controller$PidModel(
-			A2($author$project$Controller$PID$update, pidMsg, pidModel));
+		if (msg.$ === 'PidMsg') {
+			var pidMsg = msg.a;
+			if (model.$ === 'PidModel') {
+				var pidModel = model.a;
+				return $author$project$Controller$PidModel(
+					A2($author$project$Controller$PID$update, pidMsg, pidModel));
+			} else {
+				return model;
+			}
+		} else {
+			var pideqMsg = msg.a;
+			if (model.$ === 'PideqModel') {
+				var pideqModel = model.a;
+				return $author$project$Controller$PideqModel(
+					A2($author$project$Controller$PIDeq$update, pideqMsg, pideqModel));
+			} else {
+				return model;
+			}
+		}
 	});
 var $author$project$ModelSystem$Level$update = F2(
 	function (msg, model) {
@@ -26171,6 +26311,9 @@ var $author$project$DataConvert$usFromDatum = function (chartDatum) {
 var $author$project$Controller$PidMsg = function (a) {
 	return {$: 'PidMsg', a: a};
 };
+var $author$project$Controller$PideqMsg = function (a) {
+	return {$: 'PideqMsg', a: a};
+};
 var $author$project$Controller$PID$PidKd = function (a) {
 	return {$: 'PidKd', a: a};
 };
@@ -27175,13 +27318,96 @@ var $author$project$Controller$PID$view = F2(
 						]))
 				]));
 	});
+var $author$project$Controller$PIDeq$PidKd = function (a) {
+	return {$: 'PidKd', a: a};
+};
+var $author$project$Controller$PIDeq$PidKi = function (a) {
+	return {$: 'PidKi', a: a};
+};
+var $author$project$Controller$PIDeq$PidKp = function (a) {
+	return {$: 'PidKp', a: a};
+};
+var $author$project$Controller$PIDeq$PidUeq = function (a) {
+	return {$: 'PidUeq', a: a};
+};
+var $author$project$Controller$PIDeq$view = F2(
+	function (model, msgToMainMsg) {
+		var ueqStr = function ($) {
+			return $.ueqStr;
+		}(model);
+		var kpStr = function ($) {
+			return $.kpStr;
+		}(model);
+		var kiStr = function ($) {
+			return $.kiStr;
+		}(model);
+		var kdStr = function ($) {
+			return $.kdStr;
+		}(model);
+		return A2(
+			$mdgriffith$elm_ui$Element$column,
+			_List_fromArray(
+				[
+					$mdgriffith$elm_ui$Element$spacing(10),
+					$mdgriffith$elm_ui$Element$padding(20),
+					$mdgriffith$elm_ui$Element$centerX
+				]),
+			_List_fromArray(
+				[
+					$author$project$UI$heading('Controller'),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[
+							$mdgriffith$elm_ui$Element$spacing(20)
+						]),
+					_List_fromArray(
+						[
+							A3(
+							$author$project$UI$textField,
+							kpStr,
+							'Kp',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PIDeq$PidKp)),
+							A3(
+							$author$project$UI$textField,
+							kiStr,
+							'Ki',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PIDeq$PidKi)),
+							A3(
+							$author$project$UI$textField,
+							kdStr,
+							'Kd',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PIDeq$PidKd))
+						])),
+					A2(
+					$mdgriffith$elm_ui$Element$row,
+					_List_fromArray(
+						[$mdgriffith$elm_ui$Element$centerX]),
+					_List_fromArray(
+						[
+							A3(
+							$author$project$UI$textField,
+							ueqStr,
+							'Ueq',
+							A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PIDeq$PidUeq))
+						]))
+				]));
+	});
 var $author$project$Controller$view = F2(
 	function (model, msgToMainMsg) {
-		var pidModel = model.a;
-		return A2(
-			$author$project$Controller$PID$view,
-			pidModel,
-			A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PidMsg));
+		if (model.$ === 'PidModel') {
+			var pidModel = model.a;
+			return A2(
+				$author$project$Controller$PID$view,
+				pidModel,
+				A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PidMsg));
+		} else {
+			var pideqModel = model.a;
+			return A2(
+				$author$project$Controller$PIDeq$view,
+				pideqModel,
+				A2($elm$core$Basics$composeL, msgToMainMsg, $author$project$Controller$PideqMsg));
+		}
 	});
 var $author$project$ModelSystem$Level2Msg = function (a) {
 	return {$: 'Level2Msg', a: a};
